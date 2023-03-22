@@ -1,0 +1,41 @@
+server:
+  port: 8080
+spring:
+  datasource:
+    url: "jdbc:postgresql://localhost:5432/postgres"
+    username: "postgres"
+    password: ""
+  jpa:
+    hibernate:
+      ddl-auto: create-drop
+    show-sql: true
+    properties:
+      hibernate:
+        dialect: "org.hibernate.dialect.PostgreSQLDialect"
+        format_sql: true
+  kafka:
+    consumer:
+      bootstrap-servers: ["localhost:8097", "localhost:8098", "localhost:8099"]
+      # bootstrap-servers: ["kafka1:8097", "kafka2:8098", "kafka3:8099"]
+      group-id: channelA
+      auto-offset-reset: earliest
+      key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+      value-deserializer: org.springframework.kafka.support.serializer.ErrorHandlingDeserializer
+      properties:
+        spring:
+          json:
+            trusted:
+              packages: "*"
+          deserializer:
+            value:
+              delegate:
+                class: org.springframework.kafka.support.serializer.JsonDeserializer
+#          value-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+    producer:
+      key-serializer: org.apache.kafka.common.serialization.StringSerializer
+  #      value-serializer: org.apache.kafka.common.serialization.StringSerializer
+      bootstrap-servers: ["localhost:8097", "localhost:8098", "localhost:8099"]
+      # bootstrap-servers: ["kafka1:8097", "kafka2:8098", "kafka3:8099"]
+      value-serializer: org.springframework.kafka.support.serializer.JsonSerializer
+    bootstrap-servers: ["localhost:8097", "localhost:8098", "localhost:8099"]
+    # bootstrap-servers: ["kafka1:8097", "kafka2:8098", "kafka3:8099"]
